@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	."cms/structs"
 )
 
 const BatchSize int = 500
@@ -17,10 +18,10 @@ func init() {
 	conf := config.AppConfig.MySQL
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", conf.Username, conf.Password, conf.Url, conf.Database)
 	e, err := xorm.NewEngine("mysql", dataSourceName)
-	e.SetMapper(LowerFirstMapper{})
+	//设置首字母小写
+	//e.SetMapper(LowerFirstMapper{})
 	e.SetMaxIdleConns(conf.MaxIdle)
 	e.SetMaxOpenConns(conf.MaxActive)
-
 	if config.AppConfig.Server.LogModelEnable {
 		e.ShowSQL(true)
 	} else {
@@ -28,6 +29,14 @@ func init() {
 	}
 	if err != nil {
 		log.Fatalf("mysql connection failed: %q", err)
+	}
+	//将维护的表放到这里
+	if err = e.Sync(
+		new(User));
+		err != nil {
+		log.Fatalf("Fail to sync struct to  table schema : %v", err)
+	} else {
+		fmt.Println("Succ sync struct to table schema")
 	}
 	//if config.AppConfig.Server.LogModelEnable {
 	//	engine.Logger().SetLevel(core.LOG_DEBUG)

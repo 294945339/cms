@@ -17,7 +17,7 @@ func getAuthMiddleware() *jwt.GinJWTMiddleware {
 		MaxRefresh: time.Hour,
 		Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
 			user := userService.GetUserByName(username)
-			if strings.EqualFold(user.IsActive, "Yes") && user.DepartmentId == 1 && user.RoleId == 100 && strings.Compare(password, user.Password) > -1 {
+			if strings.Compare(password, user.Password) > -1 {
 				return username, true
 			}
 			return username, false
