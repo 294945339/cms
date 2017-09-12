@@ -1,0 +1,11 @@
+server:
+  logLevel: debug
+  port: 8099
+
+mysql:
+  url: 127.0.0.1:3306
+  database: cms
+  username: root
+  password: 123456
+  maxIdle: 10
+  maxActive: 50
